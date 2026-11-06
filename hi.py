@@ -23,6 +23,9 @@ class Cab:
 
 
 def showcabs(cabs):
+    if len(cabs) == 0:
+            print("No cabs in waiting")
+            return
     for i in range(len(cabs)):
         print(f"{i+1}. Driver: {cabs[i].name}")
         print(f"   Destination : {cabs[i].destination}")
@@ -33,6 +36,16 @@ def showcabs(cabs):
         else:
             print("   Status: Open")
 
+def showrequests(requests):
+    if len(requests) == 0:
+        print("No waiting student")
+        return
+    
+    for i in range(len(requests)):
+        x = requests[i]
+        print(f"{i+1}. {x.name}, {x.destination}, {x.time_slot}, year {x.year} ")
+
+
 def add_request(requests):
     while True:    
         name = input("Name of the student: ").strip()
@@ -41,14 +54,14 @@ def add_request(requests):
         print("Name cannot be empty")
 
     while True:
-        destination = input("Destination? ").title()
+        destination = input("Destination? ").strip().title()
         if destination not in ["Delhi", "Jaipur"]:
             print("Destination can only be 'Delhi' or 'Jaipur'")
         else:
             break
 
     while True:
-        time = input("Time_slot? ").title()
+        time = input("Time_slot? ").strip().title()
         if time not in ["Morning","Afternoon","Evening","Night"]:
             print('Invalid time slot, time slot can only be "Morning","Afternoon","Evening","Night" ')
         else:
@@ -61,32 +74,51 @@ def add_request(requests):
                 break
             else:
                 print("Year must be between 1 and 5")
-            break
         except ValueError:
             print("Please enter a number")
 
     student = RideRequest(name,destination,time,year)
     requests.append(student)
     print(f"Request submitted! Ride number: {student.ride_no}")
-    
+
+cabs = []
+
+requests = []
 
 with open("cabs.json", "r") as f:
     data = json.load(f)
 
-cabs = []
 
 for i in data:
     cab = Cab(i['driver_name'], i['seats'], i['destination'], i['time_slot'])
     cabs.append(cab)
 
-#showcabs(cabs)
 
-requests = []
+print("=========== CAB POOL MATCHER ===========")
+print("1. Add a ride request")
+print("2. View waiting students")
+print("3. View all cabs")
+print("4. Quit \n")
 
-add_request(requests)
 
-print(requests[0].name)
-print(requests[0].destination)
+while True:
+    while True:
+        try:
+            x = int(input("Enter your choice: "))
+            if 1<=x<=4:
+                break
+            print("Enter from 1 to 4")
+        except ValueError:
+            print("Please enter a no. ")
+    if x == 1:
+        add_request(requests)
+    elif x ==2:
+        showrequests(requests)
+    elif x == 3:
+        showcabs(cabs)
+    else:
+        print("========== Thank you for visiting! ==========")
+        print("========== Hope to see you again :) ==========")
+        break
 
-        
 

@@ -1,6 +1,5 @@
 import json
 
-
 class RideRequest:
     no_of_riderequest=0
     def __init__(self, name, destination, time_slot, year):
@@ -35,6 +34,41 @@ def showcabs(cabs):
         else:
             print("   Status: Open")
 
+def add_request(requests):
+    while True:    
+        name = input("Name of the student: ")
+        if name:
+            break
+        print("Name cannot be empty")
+
+    while True:
+        destination = input("Destination? ")
+        destination = destination.upper()
+        if destination not in ["DELHI", "JAIPUR"]:
+            print("Destination can only be 'Delhi' or 'Jaipur'")
+        else:
+            break
+
+    while True:
+        time = input("Time_slot? ")
+        time = time.upper()
+        if time not in ["MORNING","AFTERNOON","EVENING","NIGHT"]:
+            print('Invalid time slot, time slot can only be "MORNING","AFTERNOON","EVENING" or"NIGHT"')
+        else:
+            break
+    while True:    
+        try:
+            year = int(input("Year: "))
+            if 1 <= year <= 5:
+                break
+            else:
+                print("Year must be between 1 and 5")
+            break
+        except ValueError:
+            print("Please enter a number")
+    student = RideRequest(name,destination,time,year)
+    requests.append(student)
+
 with open("cabs.json", "r") as f:
     data = json.load(f)
 
@@ -44,6 +78,16 @@ for i in data:
     cab = Cab(i['driver_name'], i['seats'], i['destination'], i['time_slot'])
     cabs.append(cab)
 
-showcabs(cabs)
+#showcabs(cabs)
+
+requests = []
+
+add_request(requests)
+
+print(requests[0].name)
+print(requests[0].destination)
+
+
+
 
 

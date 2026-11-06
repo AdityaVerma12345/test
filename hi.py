@@ -9,7 +9,6 @@ class RideRequest:
         self.year = year
         RideRequest.no_of_riderequest+=1
         self.ride_no = RideRequest.no_of_riderequest
-        print(f"Ride no. is {self.ride_no}")
 
 
 class Cab:
@@ -36,26 +35,25 @@ def showcabs(cabs):
 
 def add_request(requests):
     while True:    
-        name = input("Name of the student: ")
+        name = input("Name of the student: ").strip()
         if name:
             break
         print("Name cannot be empty")
 
     while True:
-        destination = input("Destination? ")
-        destination = destination.upper()
-        if destination not in ["DELHI", "JAIPUR"]:
+        destination = input("Destination? ").title()
+        if destination not in ["Delhi", "Jaipur"]:
             print("Destination can only be 'Delhi' or 'Jaipur'")
         else:
             break
 
     while True:
-        time = input("Time_slot? ")
-        time = time.upper()
-        if time not in ["MORNING","AFTERNOON","EVENING","NIGHT"]:
-            print('Invalid time slot, time slot can only be "MORNING","AFTERNOON","EVENING" or"NIGHT"')
+        time = input("Time_slot? ").title()
+        if time not in ["Morning","Afternoon","Evening","Night"]:
+            print('Invalid time slot, time slot can only be "Morning","Afternoon","Evening","Night" ')
         else:
             break
+
     while True:    
         try:
             year = int(input("Year: "))
@@ -66,8 +64,11 @@ def add_request(requests):
             break
         except ValueError:
             print("Please enter a number")
+
     student = RideRequest(name,destination,time,year)
     requests.append(student)
+    print(f"Request submitted! Ride number: {student.ride_no}")
+    
 
 with open("cabs.json", "r") as f:
     data = json.load(f)
@@ -87,7 +88,5 @@ add_request(requests)
 print(requests[0].name)
 print(requests[0].destination)
 
-
-
-
+        
 

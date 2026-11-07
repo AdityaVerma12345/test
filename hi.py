@@ -1,4 +1,5 @@
 import json
+import heapq
 
 class RideRequest:
     no_of_riderequest=0
@@ -24,7 +25,7 @@ class Cab:
 
 def showcabs(cabs):
     if len(cabs) == 0:
-            print("No cabs in waiting")
+            print("No cabs available")
             return
     for i in range(len(cabs)):
         print(f"{i+1}. Driver: {cabs[i].name}")
@@ -48,7 +49,7 @@ def showrequests(requests):
 
 def add_request(requests):
     while True:    
-        name = input("Name of the student: ").strip()
+        name = input("Name of the student: ").strip().title()
         if name:
             break
         print("Name cannot be empty")
@@ -81,9 +82,23 @@ def add_request(requests):
     requests.append(student)
     print(f"Request submitted! Ride number: {student.ride_no}")
 
+def arrange(requests,arranged_requests):
+    destinations = ["Delhi", "Jaipur"]
+    times = ["Morning", "Afternoon", "Evening", "Night"]
+    for i in range(len(requests)):
+        x = requests[i]
+        index =  destinations.index(x.destination)*4 + times.index(x.time_slot)
+        arranged_requests[index].append(requests[i])
+
+
 cabs = []
 
 requests = []
+
+arranged_requests = [[],[],[],[],[],[],[],[]]
+rearranged_requests = [[],[],[],[],[],[],[],[]]
+arranged_requests_time = ["Destination: Delhi, Time Slot: Morning","Destination: Delhi, Time Slot: Afternoon","Destination: Delhi, Time Slot: Evening","Destination: Delhi, Time Slot: Night","Destination: Jaipur, Time Slot: Morning","Destination: Jaipur, Time Slot: Afternoon","Destination: Jaipur, Time Slot: Evening","Destination: Jaipur, Time Slot: Night"]
+
 
 with open("cabs.json", "r") as f:
     data = json.load(f)
@@ -121,4 +136,16 @@ while True:
         print("========== Hope to see you again :) ==========")
         break
 
+arrange(requests,arranged_requests)
 
+for i in range(8):
+    print(arranged_requests_time[i])
+
+    if not arranged_requests[i]:
+        print("No students waiting")
+    else:
+        for j in range(len(arranged_requests[i])):
+            x = arranged_requests[i][j]
+            print(f"Ride no. :- {x.ride_no} Name: {x.name} Year: {x.year}")
+
+    print("")

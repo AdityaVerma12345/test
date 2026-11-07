@@ -47,7 +47,7 @@ def showrequests(requests):
         print(f"{i+1}. {x.name}, {x.destination}, {x.time_slot}, year {x.year} ")
 
 
-def add_request(requests):
+def add_request(requests,arranged_requests):
     while True:    
         name = input("Name of the student: ").strip().title()
         if name:
@@ -81,22 +81,38 @@ def add_request(requests):
     student = RideRequest(name,destination,time,year)
     requests.append(student)
     print(f"Request submitted! Ride number: {student.ride_no}")
-
-def arrange(requests,arranged_requests):
     destinations = ["Delhi", "Jaipur"]
     times = ["Morning", "Afternoon", "Evening", "Night"]
-    for i in range(len(requests)):
-        x = requests[i]
-        index =  destinations.index(x.destination)*4 + times.index(x.time_slot)
-        arranged_requests[index].append(requests[i])
+    index = destinations.index(student.destination)*4 + times.index(student.time_slot)
+    heapq.heappush(arranged_requests[index], (-1*student.year, student.ride_no, student))
+
+
+def find_matches(cabs, arranged_requests):
+    for cab in cabs:
+        if cab.has_left:
+            continue
+        destinations = ["Delhi", "Jaipur"]
+        times = ["Morning", "Afternoon", "Evening", "Night"]
+        index = destinations.index(cab.destination)*4 + times.index(cab.time)
+        temp = arranged_requests[index].copy()
+        count =0
+        print("Driver:",cab.name)
+        if not temp:
+            print("No students waiting")
+        while temp and count < cab.seats:
+            x = heapq.heappop(temp)[2]
+            count+=1        
+            print(f"Passenger name = {x.name} and Ride no. = {x.ride_no}")
+
 
 
 cabs = []
 
 requests = []
 
+pending_requests = [[],[],[],[],[],[],[],[]]
+
 arranged_requests = [[],[],[],[],[],[],[],[]]
-rearranged_requests = [[],[],[],[],[],[],[],[]]
 arranged_requests_time = ["Destination: Delhi, Time Slot: Morning","Destination: Delhi, Time Slot: Afternoon","Destination: Delhi, Time Slot: Evening","Destination: Delhi, Time Slot: Night","Destination: Jaipur, Time Slot: Morning","Destination: Jaipur, Time Slot: Afternoon","Destination: Jaipur, Time Slot: Evening","Destination: Jaipur, Time Slot: Night"]
 
 
@@ -113,30 +129,33 @@ print("=========== CAB POOL MATCHER ===========")
 print("1. Add a ride request")
 print("2. View waiting students")
 print("3. View all cabs")
-print("4. Quit \n")
+print("4. Find the matches")
+print("5. Quit")
 
 
 while True:
     while True:
         try:
             x = int(input("Enter your choice: "))
-            if 1<=x<=4:
+            if 1<=x<=5:
                 break
-            print("Enter from 1 to 4")
+            print("Enter from 1 to 5")
         except ValueError:
             print("Please enter a no. ")
     if x == 1:
-        add_request(requests)
+        add_request(requests,arranged_requests)
     elif x ==2:
         showrequests(requests)
     elif x == 3:
         showcabs(cabs)
+    elif x ==4:
+        find_matches(cabs,arranged_requests)
     else:
         print("========== Thank you for visiting! ==========")
         print("========== Hope to see you again :) ==========")
         break
 
-arrange(requests,arranged_requests)
+#arrange(requests,arranged_requests)
 
 for i in range(8):
     print(arranged_requests_time[i])
@@ -144,8 +163,13 @@ for i in range(8):
     if not arranged_requests[i]:
         print("No students waiting")
     else:
-        for j in range(len(arranged_requests[i])):
-            x = arranged_requests[i][j]
-            print(f"Ride no. :- {x.ride_no} Name: {x.name} Year: {x.year}")
+        temp = arranged_requests[i].copy()
+
+        while temp:
+            x = heapq.heappop(temp)[2]
+            print(f"Ride no. : {x.ride_no} Name: {x.name} Year: {x.year}")
 
     print("")
+
+    
+

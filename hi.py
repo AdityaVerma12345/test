@@ -104,13 +104,44 @@ def find_matches(cabs, arranged_requests):
             count+=1        
             print(f"Passenger name = {x.name} and Ride no. = {x.ride_no}")
 
+def dispatch (cabs, arranged_requests,d,t,requests):
+        destinations = ["Delhi", "Jaipur"]
+        times = ["Morning", "Afternoon", "Evening", "Night"]
+        index = destinations.index(d)*4 + times.index(t)
+        c = 0
+        for cab in cabs:
+            if index == destinations.index(cab.destination)*4 + times.index(cab.time) and cab.has_left==False:
+                c+=1
+                break
+        if c == 0:
+            print("No available cab for the designated destination and time")
+            return
+        
+        if cab.has_left:
+            print("Cab has already been departed")
+            return
+        
+        x = arranged_requests[index]
+        print("Driver:",cab.name)
+        if not x:
+            print("No students waiting")
+            return
+        
+        while x and cab.seats>len(cab.passengers):
+            y = heapq.heappop(x)[2]     
+            cab.passengers.append(y)
+            print(f"Name: {y.name}, Year: {y.year}, Ride no.: {y.ride_no}")
+            requests.remove(y)
+
+        cab.has_left = True
+        print("Cab departed")
+            
+
 
 
 cabs = []
 
 requests = []
-
-pending_requests = [[],[],[],[],[],[],[],[]]
 
 arranged_requests = [[],[],[],[],[],[],[],[]]
 arranged_requests_time = ["Destination: Delhi, Time Slot: Morning","Destination: Delhi, Time Slot: Afternoon","Destination: Delhi, Time Slot: Evening","Destination: Delhi, Time Slot: Night","Destination: Jaipur, Time Slot: Morning","Destination: Jaipur, Time Slot: Afternoon","Destination: Jaipur, Time Slot: Evening","Destination: Jaipur, Time Slot: Night"]
@@ -130,16 +161,17 @@ print("1. Add a ride request")
 print("2. View waiting students")
 print("3. View all cabs")
 print("4. Find the matches")
-print("5. Quit")
+print("5. Dispatch the cab")
+print("6. Quit")
 
 
 while True:
     while True:
         try:
             x = int(input("Enter your choice: "))
-            if 1<=x<=5:
+            if 1<=x<=6:
                 break
-            print("Enter from 1 to 5")
+            print("Enter from 1 to 6")
         except ValueError:
             print("Please enter a no. ")
     if x == 1:
@@ -150,12 +182,27 @@ while True:
         showcabs(cabs)
     elif x ==4:
         find_matches(cabs,arranged_requests)
+    elif x ==5:
+        while True:
+            d = input("Enter the Destination ").strip().title()
+            if d not in ["Delhi", "Jaipur"]:
+                print("Destination can only be 'Delhi' or 'Jaipur'")
+            else:
+                break
+
+        while True:
+            t = input("Enter Time slot ").strip().title()
+            if t not in ["Morning","Afternoon","Evening","Night"]:
+                print('Invalid time slot, time slot can only be "Morning","Afternoon","Evening","Night" ')
+            else:
+                break
+
+        dispatch(cabs, arranged_requests,d,t,requests)
     else:
         print("========== Thank you for visiting! ==========")
         print("========== Hope to see you again :) ==========")
         break
 
-#arrange(requests,arranged_requests)
 
 for i in range(8):
     print(arranged_requests_time[i])
@@ -171,5 +218,5 @@ for i in range(8):
 
     print("")
 
-    
+
 

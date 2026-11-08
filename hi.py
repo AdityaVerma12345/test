@@ -11,7 +11,7 @@ class RideRequest:
         self.year = year
         RideRequest.no_of_riderequest+=1
         self.ride_no = RideRequest.no_of_riderequest
-        self.submitted_at = datetime.now()
+        self.submitted_at = datetime.now().isoformat(timespec="seconds")
 
 
 class Cab:
@@ -151,12 +151,12 @@ for i in data:
 
 while True:
     print("=========== CAB POOL MATCHER ===========")
-    print("1. Add a ride request")
-    print("2. View waiting students")
-    print("3. View all cabs")
-    print("4. Find the matches")
-    print("5. Dispatch the cab")
-    print("6. Quit")
+    print("Enter '1' to 1. Add a ride request")
+    print("Enter '2' to 2. View waiting students")
+    print("Enter '3' to 3. View all cabs")
+    print("Enter '4' to 4. Find the matches")
+    print("Enter '5' to 5. Dispatch the cab")
+    print("Enter '6' to 6. Quit")
     while True:
         try:
             x = int(input("Enter your choice: "))
@@ -168,7 +168,6 @@ while True:
     if x == 1:
         add_request(requests,arranged_requests)
     elif x ==2:
-        # showrequests(requests)
         for i in range(8):
                     print(arranged_requests_time[i])
         
@@ -179,7 +178,7 @@ while True:
         
                         while temp:
                             x = heapq.heappop(temp)[2]
-                            print(f"Ride no. : {x.ride_no} Name: {x.name} Year: {x.year}")
+                            print(f"Ride no. : {x.ride_no} Name: {x.name} Year: {x.year} Time: {x.submitted_at}")
         
                     print("")
     elif x == 3:

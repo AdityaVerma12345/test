@@ -1,5 +1,6 @@
 import json
 import heapq
+from datetime import datetime
 
 class RideRequest:
     no_of_riderequest=0
@@ -10,6 +11,7 @@ class RideRequest:
         self.year = year
         RideRequest.no_of_riderequest+=1
         self.ride_no = RideRequest.no_of_riderequest
+        self.submitted_at = datetime.now()
 
 
 class Cab:
@@ -36,15 +38,6 @@ def showcabs(cabs):
             print("   Status: Left")
         else:
             print("   Status: Open")
-
-def showrequests(requests):
-    if len(requests) == 0:
-        print("No waiting student")
-        return
-    
-    for i in range(len(requests)):
-        x = requests[i]
-        print(f"{i+1}. {x.name}, {x.destination}, {x.time_slot}, year {x.year} ")
 
 
 def add_request(requests,arranged_requests):
@@ -88,6 +81,9 @@ def add_request(requests,arranged_requests):
 
 
 def find_matches(cabs, arranged_requests):
+    if not cabs:
+        print("No cabs available")
+        return
     for cab in cabs:
         if cab.has_left:
             continue
@@ -117,10 +113,6 @@ def dispatch (cabs, arranged_requests,d,t,requests):
             print("No available cab for the designated destination and time")
             return
         
-        if cab.has_left:
-            print("Cab has already been departed")
-            return
-        
         x = arranged_requests[index]
         print("Driver:",cab.name)
         if not x:
@@ -137,7 +129,7 @@ def dispatch (cabs, arranged_requests,d,t,requests):
         print("Cab departed")
             
 
-
+#####################################
 
 cabs = []
 
@@ -156,16 +148,15 @@ for i in data:
     cabs.append(cab)
 
 
-print("=========== CAB POOL MATCHER ===========")
-print("1. Add a ride request")
-print("2. View waiting students")
-print("3. View all cabs")
-print("4. Find the matches")
-print("5. Dispatch the cab")
-print("6. Quit")
-
 
 while True:
+    print("=========== CAB POOL MATCHER ===========")
+    print("1. Add a ride request")
+    print("2. View waiting students")
+    print("3. View all cabs")
+    print("4. Find the matches")
+    print("5. Dispatch the cab")
+    print("6. Quit")
     while True:
         try:
             x = int(input("Enter your choice: "))
@@ -177,7 +168,20 @@ while True:
     if x == 1:
         add_request(requests,arranged_requests)
     elif x ==2:
-        showrequests(requests)
+        # showrequests(requests)
+        for i in range(8):
+                    print(arranged_requests_time[i])
+        
+                    if not arranged_requests[i]:
+                        print("No students waiting")
+                    else:
+                        temp = arranged_requests[i].copy()
+        
+                        while temp:
+                            x = heapq.heappop(temp)[2]
+                            print(f"Ride no. : {x.ride_no} Name: {x.name} Year: {x.year}")
+        
+                    print("")
     elif x == 3:
         showcabs(cabs)
     elif x ==4:
@@ -198,25 +202,8 @@ while True:
                 break
 
         dispatch(cabs, arranged_requests,d,t,requests)
+        
     else:
         print("========== Thank you for visiting! ==========")
         print("========== Hope to see you again :) ==========")
         break
-
-
-for i in range(8):
-    print(arranged_requests_time[i])
-
-    if not arranged_requests[i]:
-        print("No students waiting")
-    else:
-        temp = arranged_requests[i].copy()
-
-        while temp:
-            x = heapq.heappop(temp)[2]
-            print(f"Ride no. : {x.ride_no} Name: {x.name} Year: {x.year}")
-
-    print("")
-
-
-

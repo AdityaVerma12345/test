@@ -148,8 +148,8 @@ def dispatch (cabs, arranged_requests,d,t,requests):
 
 #####################################
 
-def student_to_dict(student):         # Used AI for this I'm so sorry I did'nt know persistance but know full well 
-    return {                          # what this code means and all but so sorry, my greed of completing got better of me :(
+def student_to_dict(student):         # Used AI for this I'm so sorry I did'nt know persistance but know full well what this code means, but still thought I told you
+    return {                          
         "name": student.name,
         "destination": student.destination,
         "time_slot": student.time_slot,
